@@ -10,7 +10,7 @@ function Test() {
   };
   return (
     <div>
-      <h1 className="text-3xl italic">Hi It's me</h1>
+      <h1 className="text-3xl italic">Hi It&apos;s me</h1>
       <form>
         <textarea
           rows="10"

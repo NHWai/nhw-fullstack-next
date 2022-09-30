@@ -2,6 +2,7 @@ import prisma from "../../lib/prisma";
 import Link from "next/link";
 import Router from "next/router";
 import { useSession } from "next-auth/react";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 async function publishPost(id) {
   await fetch(`/api/publish/${id}`, {
@@ -41,7 +42,9 @@ function Feed(props) {
     <div>
       <div className="max-w-[600px]">
         <h2 className="text-2xl font-bold uppercase">{title}</h2>
-        <p className="pt-4">{props.content}</p>
+        <ReactMarkdown parserOptions={{ commonmark: true }} className="pt-4">
+          {props.content}
+        </ReactMarkdown>
         <div className="mb-4 italic text-sm font-semibold text-right">
           By {props?.author?.name || "Unknown author"}
           <div className="text-[9px]">{props?.author?.email}</div>

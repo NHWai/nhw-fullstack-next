@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
 import Router from "next/router";
 import prisma from "../../lib/prisma";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import DOMPurify from "dompurify";
+import { marked } from "marked";
 
 const Edit = (props) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [preview, setPreview] = useState(false);
+
+  const toMark = (text) => marked.parse(text, { breaks: true });
 
   useEffect(() => {
-    setTitle(props.title);
-    setContent(props.content);
-  }, []);
+    setTitle(title === "" ? toMark(props.title) : title);
+    setContent(content === "" ? toMark(props.content) : content);
+  }, [preview]);
 
   const submitData = async (e, id) => {
     e.preventDefault();
@@ -27,6 +33,25 @@ const Edit = (props) => {
     }
     // You will implement this next ...
   };
+
+  if (preview) {
+    return (
+      <>
+        <button
+          className=" hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow text-xs w-fit"
+          onClick={() => setPreview(false)}
+        >
+          Back To Edit
+        </button>
+        <button className=" hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow text-xs w-fit">
+          Publish
+        </button>
+        <div
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
+        ></div>
+      </>
+    );
+  }
 
   return (
     <div>
@@ -47,7 +72,7 @@ const Edit = (props) => {
           <textarea
             className="p-2 border-2 border-dark-600 shadow-md"
             cols={50}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e) => setContent(toMark(e.target.value))}
             placeholder="Content"
             rows={8}
             value={content}
@@ -55,6 +80,12 @@ const Edit = (props) => {
           <div className="flex gap-4">
             <button className=" hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow text-xs w-fit">
               Edit
+            </button>
+            <button
+              className=" hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow text-xs w-fit"
+              onClick={() => setPreview(true)}
+            >
+              Preview
             </button>
             <button className=" hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow text-xs w-fit">
               <a href="#" onClick={() => Router.push("/")}>

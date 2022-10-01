@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+
+import DOMPurify from "isomorphic-dompurify";
+import { marked } from "marked";
 
 function Test() {
-  const [term, setTerm] = useState();
+  const [term, setTerm] = useState("");
 
   const detect = (e) => {
     const text = e.target.value;
     setTerm(text);
   };
+  const toMark = (text) => marked.parse(text, { breaks: true });
+
   return (
     <div>
       <h1 className="text-3xl italic">Hi It&apos;s me</h1>
@@ -18,13 +22,15 @@ function Test() {
           placeholder="typehere"
           className="p-2 border border-slate-400 rounded-md my-4 w-full"
         ></textarea>
-        <ReactMarkdown parserOptions={{ commonmark: true }}>
-          {term}
-        </ReactMarkdown>
       </form>
-      <small className="italic">
-        **Use Backslah for multiple line breaks**
-      </small>
+
+      <div className="prose">
+        <div
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(toMark(term)),
+          }}
+        ></div>
+      </div>
     </div>
   );
 }

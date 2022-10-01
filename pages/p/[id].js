@@ -2,7 +2,8 @@ import prisma from "../../lib/prisma";
 import Link from "next/link";
 import Router from "next/router";
 import { useSession } from "next-auth/react";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import DOMPurify from "isomorphic-dompurify";
+import { marked } from "marked";
 
 async function publishPost(id) {
   await fetch(`/api/publish/${id}`, {
@@ -28,6 +29,8 @@ const deletePost = async (id) => {
 
 function Feed(props) {
   const { data: session, status } = useSession();
+  const toMark = (text) => marked.parse(text, { breaks: true });
+
   if (status === "loading") {
     return <div>Authenticating ...</div>;
   }
@@ -42,9 +45,13 @@ function Feed(props) {
     <div>
       <div className="max-w-[600px]">
         <h2 className="text-2xl font-bold uppercase">{title}</h2>
-        <ReactMarkdown parserOptions={{ commonmark: true }} className="pt-4">
-          {props.content}
-        </ReactMarkdown>
+        <div className="prose">
+          <div
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(toMark(props.content)),
+            }}
+          ></div>
+        </div>
         <div className="mb-4 italic text-sm font-semibold text-right">
           By {props?.author?.name || "Unknown author"}
           <div className="text-[9px]">{props?.author?.email}</div>

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Router from "next/router";
 import prisma from "../../lib/prisma";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import DOMPurify from "dompurify";
+import DOMPurify from "isomorphic-dompurify";
 import { marked } from "marked";
 
 const Edit = (props) => {
@@ -10,13 +9,12 @@ const Edit = (props) => {
   const [content, setContent] = useState("");
   const [preview, setPreview] = useState(false);
 
-  const toMark = (text) => marked.parse(text, { breaks: true });
-
   useEffect(() => {
-    setTitle(title === "" ? toMark(props.title) : title);
-    setContent(content === "" ? toMark(props.content) : content);
+    setTitle(title === "" ? props.title : title);
+    setContent(content === "" ? props.content : content);
   }, [preview]);
 
+  const toMark = (text) => marked.parse(text, { breaks: true });
   const submitData = async (e, id) => {
     e.preventDefault();
     // TODO
@@ -46,9 +44,13 @@ const Edit = (props) => {
         <button className=" hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow text-xs w-fit">
           Publish
         </button>
-        <div
-          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
-        ></div>
+        <div className="prose">
+          <div
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(toMark(content)),
+            }}
+          ></div>
+        </div>
       </>
     );
   }
@@ -72,7 +74,7 @@ const Edit = (props) => {
           <textarea
             className="p-2 border-2 border-dark-600 shadow-md"
             cols={50}
-            onChange={(e) => setContent(toMark(e.target.value))}
+            onChange={(e) => setContent(e.target.value)}
             placeholder="Content"
             rows={8}
             value={content}

@@ -1,21 +1,36 @@
 import prisma from "../lib/prisma";
 import Link from "next/link";
+import Box from "../components/Box";
+import DOMPurify from "isomorphic-dompurify";
+import { marked } from "marked";
 
 export default function Home({ feeds }) {
+  const toMark = (text) => marked.parse(text, { breaks: true });
   return (
-    <ul className="list-disc flex flex-col gap-2">
+    <div className="flex flex-col gap-8">
       {feeds?.map((el) => {
         return (
-          <li key={el.id}>
-            <Link href={`/p/${el.id}`}>
-              <button className="underline underline-offset-4">
-                {el.title} &#62;&#62;
-              </button>
-            </Link>
-          </li>
+          <div className="cursor-pointer">
+            <Box key={el.id}>
+              <Link href={`/p/${el.id}`}>
+                <button className="text-2xl italic">{el.title}</button>
+              </Link>
+              <div className="leading-6">
+                <div className="prose">
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(
+                        toMark(el.content.slice(0, 30) + "...")
+                      ),
+                    }}
+                  ></div>
+                </div>
+              </div>
+            </Box>
+          </div>
         );
       })}
-    </ul>
+    </div>
   );
 }
 

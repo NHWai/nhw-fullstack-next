@@ -10,9 +10,9 @@ const Edit = (props) => {
   const [preview, setPreview] = useState(false);
 
   useEffect(() => {
-    setTitle(title === "" ? props.title : title);
-    setContent(content === "" ? props.content : content);
-  }, [preview]);
+    if (title === "") return setTitle(props.title);
+    if (content === "") return setContent(props.content);
+  }, [props.content, props.title]);
 
   const toMark = (text) => marked.parse(text, { breaks: true });
   const submitData = async (e, id) => {
@@ -35,21 +35,26 @@ const Edit = (props) => {
   if (preview) {
     return (
       <>
-        <button
-          className=" hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow text-xs w-fit"
-          onClick={() => setPreview(false)}
-        >
-          Back To Edit
-        </button>
-        <button className=" hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow text-xs w-fit">
-          Publish
-        </button>
         <div className="prose">
           <div
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(toMark(content)),
             }}
           ></div>
+        </div>
+        <div className="flex gap-4 mt-4">
+          <button
+            className=" hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow text-xs w-fit"
+            onClick={() => setPreview(false)}
+          >
+            Back To Editor
+          </button>
+          <button
+            onClick={(e) => submitData(e, props.id)}
+            className=" hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow text-xs w-fit"
+          >
+            Publish
+          </button>
         </div>
       </>
     );

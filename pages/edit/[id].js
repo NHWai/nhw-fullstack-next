@@ -12,7 +12,7 @@ const Edit = (props) => {
   useEffect(() => {
     if (title === "") return setTitle(props.title);
     if (content === "") return setContent(props.content);
-  }, [props.content, props.title]);
+  }, [props.content, props.title, content, title]);
 
   const toMark = (text) => marked.parse(text, { breaks: true });
   const submitData = async (e, id) => {

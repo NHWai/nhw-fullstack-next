@@ -10,8 +10,8 @@ export default function Home({ feeds }) {
     <div className="flex flex-col gap-8">
       {feeds?.map((el) => {
         return (
-          <div className="cursor-pointer">
-            <Box key={el.id}>
+          <div key={el.id} className="cursor-pointer">
+            <Box>
               <Link href={`/p/${el.id}`}>
                 <button className="text-2xl italic">{el.title}</button>
               </Link>

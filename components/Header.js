@@ -72,10 +72,14 @@ const Header = () => {
       <div className="flex gap-5 items-center text-sm">
         <div className="  md:flex items-center justify-center gap-2">
           <div className="rounded-full h-[25px] w-[25px]">
-            <img
-              src={session.user.image}
-              className="h-full w-full rounded-full"
-            />
+            <picture>
+              <source srcSet={session.user.image} type="image/webp" />
+              <img
+                src={session.user.image}
+                className="h-full w-full rounded-full"
+                alt="profile"
+              />
+            </picture>
           </div>
           <p className="hidden md:block text-center">{session.user.name}</p>
         </div>

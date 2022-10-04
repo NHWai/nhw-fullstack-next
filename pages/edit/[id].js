@@ -19,7 +19,8 @@ const Edit = (props) => {
     e.preventDefault();
     // TODO
     try {
-      const body = { title, content };
+      const updatedAt = new Date().getTime();
+      const body = { title, content, updatedAt };
       await fetch(`/api/edit/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },

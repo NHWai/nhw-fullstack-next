@@ -2,7 +2,7 @@ import prisma from "../../../lib/prisma";
 
 const handler = async (req, res) => {
   const postId = req.query.id;
-  const { title, content } = req.body;
+  const { title, content, updatedAt } = req.body;
 
   const updatedPost = await prisma.post.update({
     where: {
@@ -11,6 +11,7 @@ const handler = async (req, res) => {
     data: {
       title,
       content,
+      updatedAt,
     },
   });
 

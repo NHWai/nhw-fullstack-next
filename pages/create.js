@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Router from "next/router";
 
-const Draft = () => {
+const Create = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
@@ -11,7 +11,9 @@ const Draft = () => {
     e.preventDefault();
     // TODO
     try {
-      const body = { title, content };
+      const createdAt = new Date().getTime();
+      const updatedAt = new Date().getTime();
+      const body = { title, content, createdAt, updatedAt };
       await fetch("/api/post", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -61,4 +63,4 @@ const Draft = () => {
   );
 };
 
-export default Draft;
+export default Create;

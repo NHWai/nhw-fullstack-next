@@ -10,24 +10,25 @@ export default function Home({ feeds }) {
     <div className="flex flex-col gap-8">
       {feeds?.map((el) => {
         return (
-          <div key={el.id} className="cursor-pointer">
-            <Box>
-              <Link href={`/p/${el.id}`}>
+          <Link key={el.id} href={`/p/${el.id}`}>
+            <div className="cursor-pointer">
+              <Box>
                 <button className="text-2xl italic">{el.title}</button>
-              </Link>
-              <div className="leading-6">
-                <div className="prose">
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(
-                        toMark(el.content.slice(0, 30) + "...")
-                      ),
-                    }}
-                  ></div>
+
+                <div className="leading-6">
+                  <div className="prose">
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(
+                          toMark(el.content.slice(0, 30) + "...")
+                        ),
+                      }}
+                    ></div>
+                  </div>
                 </div>
-              </div>
-            </Box>
-          </div>
+              </Box>
+            </div>
+          </Link>
         );
       })}
     </div>
@@ -38,7 +39,7 @@ export const getStaticProps = async () => {
   const feeds = await prisma.post.findMany({
     where: { published: true },
     orderBy: {
-      id: "asc",
+      updatedAt: "desc",
     },
     include: {
       author: {
@@ -46,7 +47,7 @@ export const getStaticProps = async () => {
       },
     },
   });
-  // const feeds = [];
+
   return {
     props: { feeds },
     revalidate: 10,

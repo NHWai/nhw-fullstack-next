@@ -8,6 +8,10 @@ const Edit = (props) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [preview, setPreview] = useState(false);
+  const [updatedAt, setUpdatedAt] = useState("");
+  const now = String(new Date().getTime());
+
+  useEffect(() => setUpdatedAt(now), [now]);
 
   useEffect(() => {
     if (title === "") return setTitle(props.title);
@@ -19,7 +23,6 @@ const Edit = (props) => {
     e.preventDefault();
     // TODO
     try {
-      const updatedAt = new Date().getTime();
       const body = { title, content, updatedAt };
       await fetch(`/api/edit/${id}`, {
         method: "PUT",
@@ -89,17 +92,17 @@ const Edit = (props) => {
             <button className=" hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow text-xs w-fit">
               Edit
             </button>
-            <button
+            <div
               className=" hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow text-xs w-fit"
               onClick={() => setPreview(true)}
             >
               Preview
-            </button>
-            <button className=" hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow text-xs w-fit">
+            </div>
+            <div className=" hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow text-xs w-fit">
               <a href="#" onClick={() => Router.push("/")}>
                 Cancel
               </a>
-            </button>
+            </div>
           </div>
         </form>
       </div>

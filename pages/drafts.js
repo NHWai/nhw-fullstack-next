@@ -24,7 +24,7 @@ export const getServerSideProps = async ({ req, res }) => {
       },
     },
   });
-  console.log(draft);
+
   return {
     props: { drafts: draft },
   };

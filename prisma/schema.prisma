@@ -17,8 +17,8 @@ model Post {
   published Boolean @default(false)
   author    User?   @relation(fields: [authorId], references: [id])
   authorId  String?
-  createdAt Int
-  updatedAt Int
+  createdAt String
+  updatedAt String
 }
 
 model Account {

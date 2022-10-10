@@ -13,7 +13,7 @@ export const getServerSideProps = async ({ req, res }) => {
     return { props: { drafts: [] } };
   }
 
-  let draft = await prisma.post.findMany({
+  let drafts = await prisma.post.findMany({
     where: {
       author: { email: session.user.email },
       published: false,
@@ -26,7 +26,7 @@ export const getServerSideProps = async ({ req, res }) => {
   });
 
   return {
-    props: { drafts: draft },
+    props: { drafts },
   };
 };
 
@@ -45,7 +45,6 @@ const Drafts = (props) => {
   if (props.drafts.length == 0) {
     return <div className="text-3xl italic">No drafts so far</div>;
   }
-  console.log(props);
   return (
     <div>
       <div className="page">
